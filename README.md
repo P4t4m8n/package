@@ -15,7 +15,7 @@ Because we believe life's too short for slow development servers and that CRUDL 
 Open your terminal and prepare for the magic. If you listen closely, you might even hear the faint whispers of React components cheering you on:
 
 
-npx react-vite-starter create my-awesome-project
+npx my-react-vite-starter create my-awesome-project
 
 cd my-awesome-project
 
