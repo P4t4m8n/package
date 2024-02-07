@@ -1,0 +1,15 @@
+{
+  "name": "my-starter",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "(https://github.com/P4t4m8n/package.git)"
+  },
+  "author": "Eran Michaeli",
+  "license": "ISC"
+}
