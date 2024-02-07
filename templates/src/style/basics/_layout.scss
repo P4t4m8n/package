@@ -1,0 +1,7 @@
+.main-container {
+    grid-template-columns: auto;
+    grid-template-rows: 10% 1fr 10%;
+    height: 100vh;
+    gap: 3rem;
+    padding: 1rem;
+}
