@@ -16,6 +16,9 @@ Open your terminal and prepare for the magic. If you listen closely, you might e
 
 
 npx react-vite-starter create my-awesome-project
+
 cd my-awesome-project
+
 npm install
+
 npm run dev
