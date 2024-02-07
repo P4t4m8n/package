@@ -1,8 +1,10 @@
+## Still under testing. Not everything works as it should
+
+
 # React-Vite-Starter 🚀✨
 
 Welcome aboard the `React-Vite-Starter` express! Choo choo! 🚂 Your one-stop solution to kickstarting your React projects with the speed of Vite, equipped with a full suite of features that would make even the most seasoned developers' beards grow longer with wisdom.
 
-# !!!!!!!!!!!!!!!!!!!!!!Still under testing. Not everything works as it should!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ## Why `React-Vite-Starter`?
 
