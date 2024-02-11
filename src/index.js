@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import path from 'path'
-import { promptForStructure } from './lib/promptForStructure'
-import { customize } from './lib/customize'
-import { postScaffolding } from './lib/postScaffolding'
+import { promptForStructure } from './lib/promptForStructure.js'
+import { customize } from './lib/customize.js'
+import { postScaffolding } from './lib/postScaffolding.js'
 
 console.log('Index.js is running')
 
