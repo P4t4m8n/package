@@ -1,0 +1,25 @@
+{
+  "name": "<%= name %>",
+  "version": "<%= version %>",
+  "private": true,
+  "type": "module",
+  "scripts":{
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    <% if(devDependencies) { %>
+    <% Object.keys(devDependencies).forEach(function(key, index, array) { %>
+      "<%= key %>": "<%= devDependencies[key] %>"<%= index < array.length - 1 ? ',' : '' %>
+    <% }); %>
+    <% } %>
+  },
+  "dependencies": {
+    <% if(dependencies) { %>
+    <% Object.keys(dependencies).forEach(function(key, index, array) { %>
+      "<%= key %>": "<%= dependencies[key] %>"<%= index < array.length - 1 ? ',' : '' %>
+    <% }); %>
+    <% } %>
+  }
+}

@@ -5,7 +5,7 @@ const BASE_URL = 'item/'
 
 export const itemService = {
     query,
-    getById,
+    get,
     save,
     remove,
     getEmptyitem,
@@ -19,7 +19,7 @@ async function query(filterBy = { txt: '' }) {
     } catch (err) { throw err }
 }
 
-async function getById(itemId) {
+async function get(itemId) {
     try {
         const item = await httpService.get(BASE_URL + itemId)
         return item

@@ -1,0 +1,35 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router";
+import { <%= entityName %>Service } from "../../services/<%= entityName %>.service";
+
+        export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Details() {
+            const [<%= entityName %>, set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>] =
+                    useState(null);
+                    const params = useParams();
+
+                    useEffect(() => {
+                    load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(params.<%= entityName %>Id);
+                            }, [params.<%= entityName %>Id]);
+
+                                const load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> = async (<%=
+                                        entityName %>Id) => {
+                                        try {
+                                        const <%= entityName %> = await <%= entityName %>Service.get(<%= entityName %>
+                                                    Id);
+                                                    set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(
+                                                        <%= entityName %>);
+                                                            } catch (err) {
+                                                            console.log(err);
+                                                            }
+                                                            };
+
+                                                            if (!<%= entityName %>) return <div>...Loading</div>;
+                                                                const { imgUrl, name, description } = <%= entityName %>;
+                                                                    return (
+                                                                    <section className="<%= entityName %>-details">
+                                                                        <img src={imgUrl} alt={name}></img>
+                                                                        <header>{name}</header>
+                                                                        <p>{description}</p>
+                                                                    </section>
+                                                                    );
+                                                                    }

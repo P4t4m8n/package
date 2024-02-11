@@ -5,14 +5,14 @@ import { storageService } from './async-storage.service.js'
 const ITEM_DB = 'item_db'
 _createItems()
 
-export const itemServiceLocal = {
+export const itemService = {
     query,
     getById,
     save,
     remove,
     getEmptyitem,
 }
-window.cs = itemServiceLocal
+window.cs = itemService
 
 async function query(filterBy = {}) {
     try {

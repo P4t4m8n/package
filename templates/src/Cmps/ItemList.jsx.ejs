@@ -1,0 +1,19 @@
+import { Link } from "react-router-dom";
+import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Preview } from "./<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Preview";
+
+export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List({ <%= entityName %>s, onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> }) {
+
+    return (
+        <ul className="<%= entityName %>-list grid">
+            {<%= entityName %>s.map((<%= entityName %>, idx) =>
+                <li className="flex" key={idx}>
+                    <<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Preview <%= entityName %>={<%= entityName %>} />
+                    <div className="<%= entityName %>-btns flex">
+                        <Link to={'edit/' + <%= entityName %>._id}>Details</Link>
+                        <button onClick={() => onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>._id)}>Remove</button>
+                    </div>
+                </li>
+            )}
+        </ul>
+    );
+}

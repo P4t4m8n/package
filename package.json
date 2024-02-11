@@ -1,7 +1,7 @@
 {
   "name": "my-react-vite-starter",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "url": "(https://github.com/P4t4m8n/package.git)"
   },
   "bin": {
-    "my-starter": "./bin/cli.js"
+    "starter": "./bin/cli.js"
   },
   "author": "Eran Michaeli",
   "license": "ISC",

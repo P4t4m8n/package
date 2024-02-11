@@ -11,7 +11,6 @@ const initialState = {
     users: [],
 
 }
-
 export function userReducer(state = initialState, action) {
     let idx, users
 

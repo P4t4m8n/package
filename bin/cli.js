@@ -4,9 +4,9 @@ import { program } from 'commander'
 import { scaffoldProject } from '../src/index.js'
 
 program
-    .name('my-starter-test')
+    .name('starter')
     .description('CLI to scaffold new projects')
-    .version('1.0.0')
+    .version('0.0.5')
 
 program.command('create <project-name>')
     .description('Create a new project')

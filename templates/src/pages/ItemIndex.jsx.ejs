@@ -1,0 +1,30 @@
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s, remove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> } from "../store/actions/<%= entityName %>.actions";
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service";
+import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List } from "../cmps/<%= entityName %>Index/<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List";
+import { Link } from "react-router-dom";
+
+export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Index() {
+    const <%= entityName %>s = useSelector(storeState => storeState.<%= entityName %>Module.<%= entityName %>s);
+
+    useEffect(() => {
+        load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s();
+    }, []);
+
+    async function onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>Id) {
+        try {
+            await remove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>Id);
+            showSuccessMsg('<%= entityName %> removed');
+        } catch (err) {
+            showErrorMsg('Cannot remove <%= entityName %>', err);
+        }
+    }
+
+    return (
+        <section className="<%= entityName %>-index flex">
+            <Link to={'edit'}>Add <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %></Link>
+            <<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List <%= entityName %>s={<%= entityName %>s} onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>= {onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>} />
+        </section>
+    );
+}

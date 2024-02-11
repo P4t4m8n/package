@@ -1,0 +1,36 @@
+import { <%= entityName %>Service } from "../../services/server/<%= entityName %>.service";
+import { ADD_<%= entityName.toUpperCase() %>, EDIT_<%= entityName.toUpperCase() %>, REMOVE_<%= entityName.toUpperCase() %>, SET_<%= entityName.toUpperCase() %>S } from "../reducers/<%= entityName %>.reducer";
+import { store } from "../store";
+
+export async function load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s() {
+    try {
+        const <%= entityName %>s = await <%= entityName %>Service.query();
+        store.dispatch({ type: SET_<%= entityName.toUpperCase() %>S, <%= entityName %>s });
+
+    } catch (err) {
+        console.log(`Cannot load <%= entityName %>s`, err);
+        throw err;
+    }
+}
+
+export async function remove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>Id) {
+    try {
+        await <%= entityName %>Service.remove(<%= entityName %>Id);
+        store.dispatch({ type: REMOVE_<%= entityName.toUpperCase() %>, <%= entityName %>Id });
+    } catch (err) {
+        console.log(`Cannot remove <%= entityName %>`, err);
+        throw err;
+    }
+}
+
+export async function save<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>) {
+    const type = (<%= entityName %>._id) ? EDIT_<%= entityName.toUpperCase() %> : ADD_<%= entityName.toUpperCase() %>;
+    try {
+        const saved<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> = await <%= entityName %>Service.save(<%= entityName %>);
+        store.dispatch({ type, saved<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> });
+        return saved<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>;
+    } catch (err) {
+        console.log(`Cannot save <%= entityName %>`, err);
+        throw err;
+    }
+}

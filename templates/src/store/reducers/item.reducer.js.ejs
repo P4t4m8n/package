@@ -1,0 +1,33 @@
+export const SET_<%= entity.toUpperCase() %>S = 'SET_<%= entity.toUpperCase() %>S';
+export const REMOVE_<%= entity.toUpperCase() %> = 'REMOVE_<%= entity.toUpperCase() %>';
+export const ADD_<%= entity.toUpperCase() %> = 'ADD_<%= entity.toUpperCase() %>';
+export const EDIT_<%= entity.toUpperCase() %> = 'EDIT_<%= entity.toUpperCase() %>';
+
+const initialState = {
+    <%= entity %>s: [],
+}
+
+export function <%= entity %>Reducer(state = initialState, action) {
+    let idx, <%= entity %>s;
+    switch (action.type) {
+        case SET_<%= entity.toUpperCase() %>S:
+            return { ...state, <%= entity %>s: action.<%= entity %>s };
+        case REMOVE_<%= entity.toUpperCase() %>:
+            idx = state.<%= entity %>s.findIndex(<%= entity %> => <%= entity %>._id === action.<%= entity %>Id);
+            <%= entity %>s = state.<%= entity %>s.slice();
+            <%= entity %>s.splice(idx, 1);
+            return { ...state, <%= entity %>s };
+
+        case ADD_<%= entity.toUpperCase() %>:
+            return { ...state, <%= entity %>s: [...state.<%= entity %>s, action.saved<%= entity.charAt(0).toUpperCase() + entity.slice(1) %>] };
+
+        case EDIT_<%= entity.toUpperCase() %>:
+            idx = state.<%= entity %>s.findIndex(<%= entity %> => <%= entity %>._id === action.saved<%= entity.charAt(0).toUpperCase() + entity.slice(1) %>._id);
+            <%= entity %>s = state.<%= entity %>s.slice();
+            <%= entity %>s.splice(idx, 1, action.<%= entity %>);
+            return { ...state, <%= entity %>s };
+
+        default:
+            return state;
+    }
+}

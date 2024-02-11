@@ -5,7 +5,7 @@ import { setContextMenu } from "../../store/actions/app.actions"
 export function useContextMenu({ item }) {
 
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 })
-    const activeContextMenuId = useSelector(storeState => storeState.appMoudle.playlistContextMenu)
+    const activeContextMenuId = useSelector(storeState => storeState.appMoudle.contextMenu)
 
     useEffect(() => {
         window.addEventListener('click', handleClickOutside)
