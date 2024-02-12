@@ -2,10 +2,6 @@ import fs from 'fs-extra'
 import ejs from 'ejs'
 import { fileURLToPath } from 'url'
 import path from 'path'
-import { handleServerServices } from './handleServerServices.js'
-import { handleLocalServices } from './handleLocalServices.js'
-import { handleUtilService } from './handleUtilService.js'
-import { handleCustomHooks } from './handleCustomHooks.js'
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -21,17 +17,60 @@ export async function customize(answers, targetDir) {
         "vite": "*",
     }
 
+    if (features.includes('customHooks') && hooks) {
+        const customHooksDir = path.join(__dirname, '..', 'templates', 'src', 'customHooks')
+
+        for (const hook of hooks) {
+            const hookTemplatePath = path.join(customHooksDir, `${hook}.js`)
+            if (await fs.pathExists(hookTemplatePath)) {
+                const hookContent = await fs.readFile(hookTemplatePath, 'utf-8')
+
+                await fs.outputFile(path.join(targetDir, 'src', 'customHooks', `${hook}.js`), hookContent)
+            } else {
+                console.log(`Template for ${hook} hook not found.`)
+            }
+        }
+    }
+
+    if (databaseType === 'server' && serverServices) {
+        const serverServicesDir = path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'server')
+        console.log("serverServicesDir:", serverServicesDir)
+        console.log("__dirname:", __dirname)
+
+        for (const service of serverServices) {
+            const serviceTemplatePath = path.join(serverServicesDir, `${service}.js`)
+            if (await fs.pathExists(serviceTemplatePath)) {
+                const serviceContent = await fs.readFile(serviceTemplatePath, 'utf-8')
+                await fs.outputFile(path.join(targetDir, 'src', 'services', `${service}.js`), serviceContent)
+            } else {
+                console.log(`Template for ${service} service not found.`)
+            }
+        }
+    }
+
+    if (databaseType === 'local' && localServices) {
+        const localServicesDir = path.join(__dirname, '..', 'templates', 'src', 'services', 'local')
+
+        for (const service of localServices) {
+            const serviceTemplatePath = path.join(localServicesDir, `${service}.js`)
+            if (await fs.pathExists(serviceTemplatePath)) {
+                const serviceContent = await fs.readFile(serviceTemplatePath, 'utf-8')
+                await fs.outputFile(path.join(targetDir, 'src', 'services', `${service}.js`), serviceContent)
+            } else {
+                console.log(`Template for ${service} service not found.`)
+            }
+        }
+    }
+
+    const utilTemplatePath = path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'util.service.js')
+    const utilContent = await fs.readFile(utilTemplatePath, 'utf-8')
+    await fs.outputFile(path.join(targetDir, 'src', 'services', 'util.service.js'), utilContent)
+
     if (databaseType === 'server') {
         dependencies['axios'] = '*'
     }
 
-    await handleCustomHooks(__dirname, hooks, targetDir)
-    await handleServerServices(__dirname, serverServices, targetDir)
-    await handleLocalServices(__dirname, localServices, targetDir)
-    await handleUtilService(__dirname, targetDir)
-
-    const serviceSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'services', databaseType)
-    console.log("serviceSrcDir:", serviceSrcDir)
+    const serviceSrcDir = path.join(__dirname, '..', 'templates', 'src', 'services', databaseType)
     const serviceDestDir = path.join(targetDir, 'src', 'services')
     await fs.copy(serviceSrcDir, serviceDestDir)
 
@@ -48,7 +87,7 @@ export async function customize(answers, targetDir) {
         await fs.remove(originalServiceFilePath)
     }
 
-    const pagesSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'pages')
+    const pagesSrcDir = path.join(__dirname, '..', 'templates', 'src', 'pages')
     const pagesDestDir = path.join(targetDir, 'src', 'pages')
     await fs.copy(pagesSrcDir, pagesDestDir)
 
@@ -67,7 +106,7 @@ export async function customize(answers, targetDir) {
         await fs.remove(path.join(pagesDestDir, fileName))
     }
 
-    const appJsxTemplatePath = path.join(__dirname, '..', '..', 'templates', 'src', 'App.jsx.ejs')
+    const appJsxTemplatePath = path.join(__dirname, '..', 'templates', 'App.jsx.ejs')
     const appJsxTemplate = await fs.readFile(appJsxTemplatePath, 'utf-8')
     const appJsxContent = ejs.render(appJsxTemplate, {
         includeRedux,
@@ -75,11 +114,11 @@ export async function customize(answers, targetDir) {
     await fs.outputFile(path.join(targetDir, 'src', 'App.jsx'), appJsxContent)
 
     if (includeRedux) {
-        const storeSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'store')
+        const storeSrcDir = path.join(__dirname, '..', 'templates', 'src', 'store')
         const storeDestDir = path.join(targetDir, 'src', 'store')
         await fs.copy(storeSrcDir, storeDestDir)
 
-        const ejsFiles = ['actions/item.actions.js.ejs', 'reducers/item.reducer.js.ejs']
+        const ejsFiles = ['item.actions.js.ejs', 'item.reducer.js.ejs']
 
         for (const fileName of ejsFiles) {
             const ejsFilePath = path.join(storeSrcDir, fileName)
@@ -95,7 +134,7 @@ export async function customize(answers, targetDir) {
         }
     }
 
-    const cmpsSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'Cmps')
+    const cmpsSrcDir = path.join(__dirname, '..', 'templates', 'src', 'Cmps')
     const cmpsDestDir = path.join(targetDir, 'src', 'Cmps')
     await fs.copy(cmpsSrcDir, cmpsDestDir)
 
@@ -114,7 +153,7 @@ export async function customize(answers, targetDir) {
         await fs.remove(path.join(cmpsDestDir, fileName))
     }
 
-    const packageJsonTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'package.json.ejs'), 'utf-8')
+    const packageJsonTemplate = await fs.readFile(path.join(__dirname, '..', 'templates', 'package.json.ejs'), 'utf-8')
     const packageJsonContent = ejs.render(packageJsonTemplate, {
         name,
         version,
@@ -124,20 +163,10 @@ export async function customize(answers, targetDir) {
 
     await fs.outputFile(path.join(targetDir, 'package.json'), packageJsonContent)
 
-    const viteConfigTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'vite.config.js.ejs'), 'utf-8')
+    const viteConfigTemplate = await fs.readFile(path.join(__dirname, '..', 'templates', 'vite.config.js.ejs'), 'utf-8')
     const viteConfigContent = ejs.render(viteConfigTemplate, {
         usesTypescript: answers.features.includes('typescript'),
     })
+
     await fs.outputFile(path.join(targetDir, 'vite.config.js'), viteConfigContent)
-
-    const indexTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'index.html'), 'utf-8')
-    await fs.outputFile(path.join(targetDir, 'src', 'index.html'), indexTemplate)
-
-    const RootCmpTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'RootCmp.jsx'), 'utf-8')
-    await fs.outputFile(path.join(targetDir, 'src', 'RootCmp.jsx'), RootCmpTemplate)
-
-    const gitignoreTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', '.gitignore'), 'utf-8')
-    await fs.outputFile(path.join(targetDir, 'src', '.gitignore'), gitignoreTemplate)
-
-
 }
