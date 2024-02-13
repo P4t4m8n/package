@@ -43,6 +43,22 @@ export async function promptForStructure() {
             ],
             when: (answers) => answers.features.find(feature => feature === 'customHooks')
         },
+        {
+
+            type: 'input',
+            name: 'cloudName',
+            message: 'Enter your cloudinary cloud name',
+            default: '',
+            when: (answers) => answers.hooks.find(hook => hook === 'useImageUpload')
+        },
+        {
+
+            type: 'input',
+            name: 'uploadPresets',
+            message: 'Enter your Upload Presets',
+            default: '',
+            when: (answers) => answers.hooks.find(hook => hook === 'useImageUpload')
+        },
 
         {
             type: 'list',
@@ -60,12 +76,11 @@ export async function promptForStructure() {
             choices: [
                 { name: 'HTTP Service', value: 'http.service' },
                 { name: 'Socket Service', value: 'socket.service' },
-                { name: 'Upload Service', value: 'upload.service' },
                 { name: 'User Service', value: 'user.service' }
             ],
             when: (answers) => answers.databaseType === 'server'
         },
-       
+
         {
             type: 'checkbox',
             name: 'localServices',

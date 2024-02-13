@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export async function customize(answers, targetDir) {
-    const { name, version, databaseType, entityName, includeRedux, features, serverServices, hooks, localServices } = answers
+    const { name, version, databaseType, entityName, includeRedux, features, serverServices, hooks, localServices, cloudName, uploadPresets } = answers
     let dependencies = {
         "react": "*",
         "react-dom": "*",
@@ -38,7 +38,6 @@ export async function customize(answers, targetDir) {
     await handleCustomHooks(__dirname, hooks, targetDir)
     await handleServerServices(__dirname, serverServices, targetDir)
     await handleLocalServices(__dirname, localServices, targetDir)
-    await handleUtilService(__dirname, targetDir)
 
     const serviceSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'services', databaseType)
     const serviceDestDir = path.join(targetDir, 'src', 'services')
@@ -49,6 +48,15 @@ export async function customize(answers, targetDir) {
     const utilTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'util.service.js'), 'utf-8')
     await fs.outputFile(path.join(serviceDestDir, 'util.service.js'), utilTemplate)
 
+    if (hooks && hooks.useImageUpload) {
+        const uploadServiceTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'upload.service.js.ejs'), 'utf-8')
+        const uploadServiceContent = ejs.render(uploadServiceTemplate, {
+            cloudName,
+            uploadPresets,
+
+        })
+        await fs.outputFile(path.join(serviceDestDir, 'upload.service.js'), uploadServiceContent)
+    }
 
     await fs.copy(serviceSrcDir, serviceDestDir)
 
