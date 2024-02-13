@@ -27,11 +27,23 @@ export async function promptForStructure() {
             message: 'Select features to include in your project:',
             choices: [
                 { name: 'Custom Hooks', value: 'customHooks' },
-                { name: 'Image Handling', value: 'imageHandling' },
-                { name: 'Users Support', value: 'usersSupport' },
-                { name: 'Event Bus(User msg)', value: 'eventBus' },
             ],
         },
+        {
+            type: 'checkbox',
+            name: 'hooks',
+            message: 'Select Custom hooks to include:',
+            choices: [
+                { name: 'Contex Menu', value: 'useContextMenu' },
+                { name: 'Device Check', value: 'useDeviceCheck' },
+                { name: 'Drag and Drop', value: 'useDND' },
+                { name: 'Use Effect Update', value: 'useEffectUpdate' },
+                { name: 'Use Form', value: 'useForm' },
+                { name: 'Use Image Upload', value: 'useImageUpload' },
+            ],
+            when: (answers) => answers.features.find(feature => feature === 'customHooks')
+        },
+
         {
             type: 'list',
             name: 'databaseType',
@@ -40,12 +52,6 @@ export async function promptForStructure() {
                 { name: 'Backend-Server', value: 'server' },
                 { name: 'async Local Storage', value: 'local' }
             ],
-        },
-        {
-            type: 'input',
-            name: 'entityName',
-            message: 'Enter the entity name (e.g., toy, book):',
-            default: 'item',
         },
         {
             type: 'checkbox',
@@ -59,27 +65,27 @@ export async function promptForStructure() {
             ],
             when: (answers) => answers.databaseType === 'server'
         },
+       
         {
             type: 'checkbox',
             name: 'localServices',
             message: 'Select additional local services you want to include:',
             choices: [
-                { name: 'User Service', value: 'userService' }
+                { name: 'User Service', value: 'user.service' }
             ],
             when: (answers) => answers.databaseType === 'local'
         },
         {
-            type: 'checkbox',
-            name: 'hooks',
-            message: 'Select Custom hooks to include:',
-            choices: [
-                { name: 'Contex Menu', value: 'useContextMenu' },
-                { name: 'Device Check', value: 'useDeviceCheck' },
-                { name: 'Drag and Drop', value: 'useDND' },
-                { name: 'Use Effect Update', value: 'useEffectUpdate' },
-                { name: 'Use Form', value: 'useForm' },
-            ],
-            when: (answers) => answers.features.customHooks
+            type: 'input',
+            name: 'entityName',
+            message: 'Enter the entity name (e.g., toy, book):',
+            default: 'item',
+        },
+        {
+            type: 'confirm',
+            name: 'initializeGit',
+            message: 'Would you like to initialize a Git repository?',
+            default: false,
         },
 
     ])

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { login, signup } from '../store/actions/user.actions'
 import { useForm } from '../customHooks/useForm'
-import { userService } from '../services/server/user.service'
+import { userService } from '../services/user.service'
 import { useImageUpload } from '../customHooks/useImageUpload'
 
 

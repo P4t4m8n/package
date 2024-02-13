@@ -1,10 +1,10 @@
 import { combineReducers, compose, legacy_createStore as createStore } from "redux"
-import {  <%= entity %>Reducer } from "./reducers/ <%= entity %>.reducer"
+import {  <%= entityName %>Reducer } from "./reducers/<%= entityName %>.reducer"
 import { userReducer } from "./reducers/user.reducer"
 import { appRedcuer } from "./reducers/app.redcuer"
 
 const rootReducer = combineReducers({
-    <%= entity %>Module:  <%= entity %>Reducer,
+    <%= entityName %>Module:  <%= entityName %>Reducer,
     userModule: userReducer,
     appMoudle: appRedcuer,
 

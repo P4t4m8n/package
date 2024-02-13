@@ -12,7 +12,7 @@ export async function scaffoldProject(projectName) {
     const answers = await promptForStructure()
 
     await customize(answers, targetDir)
-    await postScaffolding(targetDir)
+    await postScaffolding(targetDir,answers)
     console.log('Your project is ready!')
 
 }

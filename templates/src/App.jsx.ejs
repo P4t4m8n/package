@@ -5,14 +5,14 @@ import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
   import { Provider } from 'react-redux'
   import { store } from './store/store'
   <% } %>
-import { ItemIndex } from './pages/ItemIndex'
+import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Index } from './pages/<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Index'
 import { HomePage } from './pages/HomePage'
-import { ItemDetails } from './pages/ItemDetails'
-import { ItemEdit } from './pages/ItemEdit'
+import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Details } from './pages/<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Details'
+import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Edit } from './pages/<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Edit'
 import './style/main.scss'
 import { AppFooter } from './cmps/AppFooter'
 import { About } from './pages/About'
-import { AppHeader } from './Cmps/AppHeader'
+import { AppHeader } from './cmps/AppHeader'
 
 
 export function App() {
@@ -24,10 +24,10 @@ export function App() {
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<About />} />
-            <Route path='/items' element={<ItemIndex />} />
-            <Route path='/items/:itemId' element={<ItemDetails />} />
-            <Route path="/items/edit" element={<ItemEdit />} />
-            <Route path="/items/edit/:itemId" element={<ItemEdit />} />
+            <Route path='/<%= entityName %>s' element={<<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Index />} />
+            <Route path='/<%= entityName %>s/:<%= entityName %>Id' element={<<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Details />} />
+            <Route path="/<%= entityName %>s/edit" element={<<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Edit />} />
+            <Route path="/<%= entityName %>s/edit/:<%= entityName %>Id" element={<<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Edit />} />
           </Routes>
           <AppFooter />
         </section>

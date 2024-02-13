@@ -9,12 +9,12 @@ export const useForm = (initialState) => {
             case 'number':
             case 'range':
                 value = +value
-                break;
+                break
             case 'checkbox':
                 value = checked
 
             default:
-                break;
+                break
         }
         setFields((prevFields) => ({ ...prevFields, [field]: value }))
     }

@@ -1,5 +1,5 @@
-import { showSuccessMsg, showErrorMsg } from "../services/event-bus.service";
-import { uploadService } from "../services/server/upload.service";
+import { showSuccessMsg, showErrorMsg } from "../services/event-bus.service"
+import { uploadService } from "../services/upload.service"
 
 export function useImageUpload() {
 

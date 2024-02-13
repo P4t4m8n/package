@@ -8,7 +8,7 @@ export const itemService = {
     get,
     save,
     remove,
-    getEmptyitem,
+    getEmptyItem,
     
 }
 
@@ -41,7 +41,7 @@ async function save(item) {
     } catch (err) { throw err }
 }
 
-function getEmptyitem() {
+function getEmptyItem() {
     return {
         name: '',
         imgUrl: '',

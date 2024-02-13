@@ -3,7 +3,7 @@ import { storageService } from "./async-storage.service"
 const STORAGE_KEY_LOGGEDIN_USER = 'loggedinUser'
 const USER_DB = 'user_db'
 
-export const userServiceLocal = {
+export const userService = {
     login,
     logout,
     signup,

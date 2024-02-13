@@ -1,5 +1,5 @@
 
-import { utilService } from '../util.service.js'
+import { utilService } from './util.service.js'
 import { storageService } from './async-storage.service.js'
 
 const ITEM_DB = 'item_db'
@@ -7,7 +7,7 @@ _createItems()
 
 export const itemService = {
     query,
-    getById,
+    get,
     save,
     remove,
     getEmptyitem,
@@ -25,7 +25,7 @@ async function query(filterBy = {}) {
     } catch (err) { throw err }
 }
 
-async function getById(itemId) {
+async function get(itemId) {
     try {
         const item = await storageService.get(ITEM_DB, itemId)
         return item

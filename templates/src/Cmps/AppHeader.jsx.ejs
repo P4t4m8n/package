@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service'
+import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { LoginSignup } from './LoginSignup.jsx'
 import { logout } from '../store/actions/user.actions.js'
 import { useState } from 'react'
@@ -23,7 +23,7 @@ export function AppHeader() {
             <img src='src\img\logo.png'></img>
             <nav>
                 <NavLink to={"/"}>Home</NavLink>
-                <NavLink to={"/items"}>Items</NavLink>
+                <NavLink to={"/<%= entityName %>s"}><%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s</NavLink>
                 <NavLink to={"/about"}>About</NavLink>
 
             </nav>

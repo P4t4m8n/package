@@ -4,7 +4,8 @@ import fs from 'fs-extra'
 
 export async function handleCustomHooks(__dirname,hooks, targetDir) {
     if (!hooks) return;
-    const customHooksDir = path.join(__dirname, '..', 'templates', 'src', 'customHooks');
+    const customHooksDir = path.join(__dirname, '..','..', 'templates', 'src', 'customHooks');
+    console.log("customHooksDir:", customHooksDir)
     for (const hook of hooks) {
         const hookTemplatePath = path.join(customHooksDir, `${hook}.js`);
         if (await fs.pathExists(hookTemplatePath)) {

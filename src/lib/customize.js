@@ -2,11 +2,12 @@ import fs from 'fs-extra'
 import ejs from 'ejs'
 import { fileURLToPath } from 'url'
 import path from 'path'
+
 import { handleServerServices } from './handleServerServices.js'
 import { handleLocalServices } from './handleLocalServices.js'
 import { handleUtilService } from './handleUtilService.js'
 import { handleCustomHooks } from './handleCustomHooks.js'
-
+import { processDirectory } from './processDirectory.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -15,10 +16,19 @@ export async function customize(answers, targetDir) {
     const { name, version, databaseType, entityName, includeRedux, features, serverServices, hooks, localServices } = answers
     let dependencies = {
         "react": "*",
-        "react-dom": "*"
+        "react-dom": "*",
+        "react-router-dom": "*",
+        "sass": "*"
     }
     let devDependencies = {
         "vite": "*",
+        "@types/react": "*",
+        "@types/react-dom": "*",
+        "@vitejs/plugin-react": "*",
+        "eslint": "*",
+        "eslint-plugin-react": "*",
+        "eslint-plugin-react-hooks": "*",
+        "eslint-plugin-react-refresh": "*",
     }
 
     if (databaseType === 'server') {
@@ -31,8 +41,15 @@ export async function customize(answers, targetDir) {
     await handleUtilService(__dirname, targetDir)
 
     const serviceSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'services', databaseType)
-    console.log("serviceSrcDir:", serviceSrcDir)
     const serviceDestDir = path.join(targetDir, 'src', 'services')
+
+    const eventBusTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'event-bus.service.js'), 'utf-8')
+    await fs.outputFile(path.join(serviceDestDir, 'event-bus.service.js'), eventBusTemplate)
+
+    const utilTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'util.service.js'), 'utf-8')
+    await fs.outputFile(path.join(serviceDestDir, 'util.service.js'), utilTemplate)
+
+
     await fs.copy(serviceSrcDir, serviceDestDir)
 
     const originalServiceFilePath = path.join(serviceDestDir, 'item.service.js')
@@ -50,69 +67,31 @@ export async function customize(answers, targetDir) {
 
     const pagesSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'pages')
     const pagesDestDir = path.join(targetDir, 'src', 'pages')
-    await fs.copy(pagesSrcDir, pagesDestDir)
-
-    const ejsPagesFiles = ['ItemEdit.jsx.ejs', 'ItemIndex.jsx.ejs', 'ItemDetails.jsx.ejs']
-
-    for (const fileName of ejsPagesFiles) {
-        const ejsFilePath = path.join(pagesSrcDir, fileName)
-        const ejsContent = await fs.readFile(ejsFilePath, 'utf-8')
-        const renderedContent = ejs.render(ejsContent, { entityName })
-
-        const newFileName = fileName.replace('Item', entityName.charAt(0).toUpperCase() + entityName.slice(1)).replace('.ejs', '')
-        await fs.outputFile(path.join(pagesDestDir, newFileName), renderedContent)
-    }
-
-    for (const fileName of ejsPagesFiles) {
-        await fs.remove(path.join(pagesDestDir, fileName))
-    }
+    await processDirectory(pagesSrcDir, pagesDestDir, entityName)
 
     const appJsxTemplatePath = path.join(__dirname, '..', '..', 'templates', 'src', 'App.jsx.ejs')
     const appJsxTemplate = await fs.readFile(appJsxTemplatePath, 'utf-8')
     const appJsxContent = ejs.render(appJsxTemplate, {
         includeRedux,
+        entityName
     })
     await fs.outputFile(path.join(targetDir, 'src', 'App.jsx'), appJsxContent)
 
     if (includeRedux) {
         const storeSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'store')
         const storeDestDir = path.join(targetDir, 'src', 'store')
-        await fs.copy(storeSrcDir, storeDestDir)
-
-        const ejsFiles = ['actions/item.actions.js.ejs', 'reducers/item.reducer.js.ejs']
-
-        for (const fileName of ejsFiles) {
-            const ejsFilePath = path.join(storeSrcDir, fileName)
-            const ejsContent = await fs.readFile(ejsFilePath, 'utf-8')
-            const renderedContent = ejs.render(ejsContent, { entityName })
-
-            const newFileName = fileName.replace('Item', entityName.charAt(0).toUpperCase() + entityName.slice(1)).replace('.ejs', '')
-            await fs.outputFile(path.join(storeDestDir, newFileName), renderedContent)
-        }
-
-        for (const fileName of ejsFiles) {
-            await fs.remove(path.join(storeDestDir, fileName))
-        }
+        await processDirectory(storeSrcDir, storeDestDir, entityName)
+        dependencies["react-redux"] = "*"
+        dependencies["redux"] = "*"
     }
 
-    const cmpsSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'Cmps')
-    const cmpsDestDir = path.join(targetDir, 'src', 'Cmps')
-    await fs.copy(cmpsSrcDir, cmpsDestDir)
+    const styleSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'style')
+    const styleDestDir = path.join(targetDir, 'src', 'style')
+    await processDirectory(styleSrcDir, styleDestDir, entityName)
 
-    const ejsCmpsFiles = ['ItemList.jsx.ejs', 'ItemPreview.jsx.ejs']
-
-    for (const fileName of ejsCmpsFiles) {
-        const ejsFilePath = path.join(cmpsSrcDir, fileName)
-        const ejsContent = await fs.readFile(ejsFilePath, 'utf-8')
-        const renderedContent = ejs.render(ejsContent, { entityName })
-
-        const newFileName = fileName.replace('Item', entityName.charAt(0).toUpperCase() + entityName.slice(1)).replace('.ejs', '')
-        await fs.outputFile(path.join(cmpsDestDir, newFileName), renderedContent)
-    }
-
-    for (const fileName of ejsCmpsFiles) {
-        await fs.remove(path.join(cmpsDestDir, fileName))
-    }
+    const cmpsSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'cmps')
+    const cmpsDestDir = path.join(targetDir, 'src', 'cmps')
+    await processDirectory(cmpsSrcDir, cmpsDestDir, entityName)
 
     const packageJsonTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'package.json.ejs'), 'utf-8')
     const packageJsonContent = ejs.render(packageJsonTemplate, {
@@ -131,13 +110,14 @@ export async function customize(answers, targetDir) {
     await fs.outputFile(path.join(targetDir, 'vite.config.js'), viteConfigContent)
 
     const indexTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'index.html'), 'utf-8')
-    await fs.outputFile(path.join(targetDir, 'src', 'index.html'), indexTemplate)
+    await fs.outputFile(path.join(targetDir, 'index.html'), indexTemplate)
 
     const RootCmpTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'RootCmp.jsx'), 'utf-8')
     await fs.outputFile(path.join(targetDir, 'src', 'RootCmp.jsx'), RootCmpTemplate)
 
     const gitignoreTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', '.gitignore'), 'utf-8')
-    await fs.outputFile(path.join(targetDir, 'src', '.gitignore'), gitignoreTemplate)
+    await fs.outputFile(path.join(targetDir, '.gitignore'), gitignoreTemplate)
 
-
+    const eslintrcTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', '.eslintrc.cjs'), 'utf-8')
+    await fs.outputFile(path.join(targetDir, '.eslintrc.cjs'), eslintrcTemplate)
 }

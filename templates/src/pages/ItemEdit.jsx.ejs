@@ -1,51 +1,51 @@
-import { useParams } from "react-router";
-import { useEffectUpdate } from "../customHooks/useEffectUpdate";
-import { showSuccessMsg, showErrorMsg } from "../services/event-bus.service";
-import { useForm } from "../customHooks/useForm";
-import { <%= entityName %>Service } from "../services/server/<%= entityName %>.service";
-import { save<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> } from "../store/actions/<%= entityName %>.actions";
-import { useImageUpload } from "../customHooks/useImageUpload";
+import { useParams } from "react-router"
+import { useEffectUpdate } from "../customHooks/useEffectUpdate"
+import { showSuccessMsg, showErrorMsg } from "../services/event-bus.service"
+import { useForm } from "../customHooks/useForm"
+import { <%= entityName %>Service } from "../services/<%= entityName %>.service"
+import { save<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> } from "../store/actions/<%= entityName %>.actions"
+import { useImageUpload } from "../customHooks/useImageUpload"
 
 export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Edit() {
-    const [<%= entityName %>ToEdit, set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>ToEdit, handleChange] = useForm(<%= entityName %>Service.getEmpty<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>());
-    const params = useParams();
+    const [<%= entityName %>ToEdit, set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>ToEdit, handleChange] = useForm(<%= entityName %>Service.getEmpty<%= entityName %>())
+    const params = useParams()
 
     useEffectUpdate(() => {
-        load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(params.<%= entityName %>Id);
-    }, [params.<%= entityName %>Id]);
+        load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(params.<%= entityName %>Id)
+    }, [params.<%= entityName %>Id])
 
-    const [uploadImg] = useImageUpload();
+    const [uploadImg] = useImageUpload()
 
     async function load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>Id) {
-        if (!<%= entityName %>Id) return;
+        if (!<%= entityName %>Id) return
         try {
-            const <%= entityName %> = await <%= entityName %>Service.getById(<%= entityName %>Id);
-            set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>ToEdit(<%= entityName %>);
-            showSuccessMsg('<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> loaded');
+            const <%= entityName %> = await <%= entityName %>Service.getById(<%= entityName %>Id)
+            set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>ToEdit(<%= entityName %>)
+            showSuccessMsg('<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> loaded')
         } catch (err) {
-            showErrorMsg('Cannot load <%= entityName %>', err);
+            showErrorMsg('Cannot load <%= entityName %>', err)
         }
     }
 
     const onUploadImg = async (ev) => {
         try {
-            const imgUrl = await uploadImg(ev);
-            set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>ToEdit(prev<%= entityName %> => ({ ...prev<%= entityName %>, imgUrl }));
+            const imgUrl = await uploadImg(ev)
+            set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>ToEdit(prev<%= entityName %> => ({ ...prev<%= entityName %>, imgUrl }))
         } catch (err) {
-            showErrorMsg('Cannot upload image', err);
+            showErrorMsg('Cannot upload image', err)
         }
     }
 
     async function onSave<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>() {
         try {
-            const saved<%= entityName %> = await save<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>ToEdit);
-            showSuccessMsg(`<%= entityName %> saved (id: ${saved<%= entityName %>._id})`);
+            const saved<%= entityName %> = await save<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>ToEdit)
+            showSuccessMsg(`<%= entityName %> saved (id: ${saved<%= entityName %>._id})`)
         } catch (err) {
-            showErrorMsg('Cannot save <%= entityName %>', err);
+            showErrorMsg('Cannot save <%= entityName %>', err)
         }
     }
 
-    const { name, imgUrl, description } = <%= entityName %>ToEdit;
+    const { name, imgUrl, description } = <%= entityName %>ToEdit
     return (
         <form onSubmit={onSave<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>} className="<%= entityName %>-edit">
             <input name="name" value={name} placeholder={`Enter <%= entityName %> name`} onChange={handleChange} />
@@ -54,5 +54,5 @@ export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>E
             <img src={imgUrl} alt="<%= entityName %>-img" />
             <button type="submit">Save</button>
         </form>
-    );
+    )
 }
