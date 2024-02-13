@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs-extra'
 
 export async function handleLocalServices(__dirname,localServices, targetDir) {
-    if (!localServices) return;
+    if (!localServices) return
 
     const localServicesDir = path.join(__dirname, '..', 'templates', 'src', 'services', 'local')
 

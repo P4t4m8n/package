@@ -99,7 +99,7 @@ export async function customize(answers, targetDir) {
 
     const cmpsSrcDir = path.join(__dirname, '..', '..', 'templates', 'src', 'cmps')
     const cmpsDestDir = path.join(targetDir, 'src', 'cmps')
-    await processDirectory(cmpsSrcDir, cmpsDestDir, entityName)
+    await processDirectory(cmpsSrcDir, cmpsDestDir, entityName, includeRedux)
 
     const packageJsonTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'package.json.ejs'), 'utf-8')
     const packageJsonContent = ejs.render(packageJsonTemplate, {

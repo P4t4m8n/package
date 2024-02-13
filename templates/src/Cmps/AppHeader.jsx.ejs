@@ -1,48 +1,59 @@
-import { NavLink } from 'react-router-dom'
+<% if (includeRedux) { %>
 import { useSelector } from 'react-redux'
+import { logout } from '../store/actions/user.actions.js'
+<% } else { %>
+import { useState } from 'react'
+import {userService} from ''../services/user.service.js
+<% } %>
+import { NavLink } from 'react-router-dom'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { LoginSignup } from './LoginSignup.jsx'
-import { logout } from '../store/actions/user.actions.js'
-import { useState } from 'react'
 
 export function AppHeader() {
-    const user = useSelector(storeState => storeState.userModule.user)
-    const [open, setOpen] = useState(false)
+<% if (includeRedux) { %>
+const user = useSelector(storeState => storeState.userModule.user)
+<% } else { %>
+const [user, setUser] = useState(null)
+<% } %>
+const [open, setOpen] = useState(false)
 
-    async function onLogout() {
-        try {
-            await logout()
-            showSuccessMsg(`Bye now`)
-        } catch (err) {
-            showErrorMsg('Cannot logout')
-        }
-    }
+async function onLogout() {
+try {
+<% if (includeRedux) { %>
+await logout()
+<% } else { %>
+    await userService.logout()
+setUser(null)
+<% } %>
+showSuccessMsg('Bye now')
+} catch (err) {
+showErrorMsg('Cannot logout')
+}
+}
 
-    return (
-        <header className="app-header grid">
-            <img src='src\img\logo.png'></img>
-            <nav>
-                <NavLink to={"/"}>Home</NavLink>
-                <NavLink to={"/<%= entityName %>s"}><%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s</NavLink>
-                <NavLink to={"/about"}>About</NavLink>
-
-            </nav>
-            {user &&
-                <section className="user-nav">
-                    <NavLink to={`user/${user._id}`}>
-                        {user.imgUrl && <img src={user.imgUrl} />}
-                        {user.fullname}
-                    </NavLink>
-                    <button onClick={onLogout}>Logout</button>
-                </section>
-            }
-            {!user &&
-                <section className="user-nav">
-                    <button onClick={(() => setOpen(true))}>Login</button>
-                    {open && <LoginSignup open={open} setOpen={setOpen} />}
-                </section>
-            }
-
-        </header>
-    )
+return (
+<header className="app-header grid">
+  <img src='src/img/logo.png' alt='logo'></img>
+  <nav>
+    <NavLink to={"/"}>Home</NavLink>
+    <NavLink to={"/<%= entityName %>s"}><%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s</NavLink>
+    <NavLink to={"/about"}>About</NavLink>
+  </nav>
+  <% if (user) { %>
+  <section className="user-nav">
+    <NavLink to={`user/${user._id}`}>
+      <% if (user.imgUrl) { %><img src="<%= user.imgUrl %>" alt='User' /><% } %>
+      <%= user.fullname %>
+    </NavLink>
+    <button onClick={onLogout}>Logout</button>
+  </section>
+  <% } else { %>
+  <section className="user-nav">
+    <button onClick={()=> setOpen(true)}>Login</button>
+    <% if (open) { %>
+    <LoginSignup open={open} setOpen={setOpen} /><% } %>
+  </section>
+  <% } %>
+</header>
+)
 }

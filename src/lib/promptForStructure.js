@@ -37,8 +37,6 @@ export async function promptForStructure() {
                 { name: 'Contex Menu', value: 'useContextMenu' },
                 { name: 'Device Check', value: 'useDeviceCheck' },
                 { name: 'Drag and Drop', value: 'useDND' },
-                { name: 'Use Effect Update', value: 'useEffectUpdate' },
-                { name: 'Use Form', value: 'useForm' },
                 { name: 'Use Image Upload', value: 'useImageUpload' },
             ],
             when: (answers) => answers.features.find(feature => feature === 'customHooks')
@@ -76,20 +74,20 @@ export async function promptForStructure() {
             choices: [
                 { name: 'HTTP Service', value: 'http.service' },
                 { name: 'Socket Service', value: 'socket.service' },
-                { name: 'User Service', value: 'user.service' }
+                // { name: 'User Service', value: 'user.service' }
             ],
             when: (answers) => answers.databaseType === 'server'
         },
 
-        {
-            type: 'checkbox',
-            name: 'localServices',
-            message: 'Select additional local services you want to include:',
-            choices: [
-                { name: 'User Service', value: 'user.service' }
-            ],
-            when: (answers) => answers.databaseType === 'local'
-        },
+        // {
+        //     type: 'checkbox',
+        //     name: 'localServices',
+        //     message: 'Select additional local services you want to include:',
+        //     choices: [
+        //         { name: 'User Service', value: 'user.service' }
+        //     ],
+        //     when: (answers) => answers.databaseType === 'local'
+        // },
         {
             type: 'input',
             name: 'entityName',
