@@ -2,9 +2,9 @@
 import { useSelector } from 'react-redux'
 import { logout } from '../store/actions/user.actions.js'
 <% } else { %>
-import { useState } from 'react'
-import {userService} from ''../services/user.service.js
-<% } %>
+    import {userService} from ''../services/user.service.js
+    <% } %>
+    import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { LoginSignup } from './LoginSignup.jsx'
@@ -33,27 +33,27 @@ showErrorMsg('Cannot logout')
 
 return (
 <header className="app-header grid">
-  <img src='src/img/logo.png' alt='logo'></img>
+  <img src='https://res.cloudinary.com/dpnevk8db/image/upload/v1707900394/logo-removebg-preview_ypwnv4.png' alt='logo'></img>
   <nav>
     <NavLink to={"/"}>Home</NavLink>
     <NavLink to={"/<%= entityName %>s"}><%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s</NavLink>
     <NavLink to={"/about"}>About</NavLink>
   </nav>
-  <% if (user) { %>
-  <section className="user-nav">
-    <NavLink to={`user/${user._id}`}>
-      <% if (user.imgUrl) { %><img src="<%= user.imgUrl %>" alt='User' /><% } %>
-      <%= user.fullname %>
-    </NavLink>
-    <button onClick={onLogout}>Logout</button>
-  </section>
-  <% } else { %>
-  <section className="user-nav">
-    <button onClick={()=> setOpen(true)}>Login</button>
-    <% if (open) { %>
-    <LoginSignup open={open} setOpen={setOpen} /><% } %>
-  </section>
-  <% } %>
+  {user &&
+    <section className="user-nav">
+        <NavLink to={`user/${user._id}`}>
+            {user.imgUrl && <img src={user.imgUrl} alt='User' />}
+            {user.fullname}
+        </NavLink>
+        <button onClick={onLogout}>Logout</button>
+    </section>
+}
+{!user &&
+    <section className="user-nav">
+        <button onClick={() => setOpen(true)}>Login</button>
+        {open && <LoginSignup open={open} setOpen={setOpen} />}
+    </section>
+}
 </header>
 )
 }

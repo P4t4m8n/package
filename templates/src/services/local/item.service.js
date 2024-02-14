@@ -45,7 +45,6 @@ async function save(item) {
         } else {
             savedItem = await storageService.post(ITEM_DB, item)
         }
-        console.log("saveditem:", savedItem)
         return savedItem
     } catch (err) { throw err }
 }
@@ -59,48 +58,20 @@ function getEmptyitem() {
 function _createItems() {
     let items = utilService.loadFromStorage(ITEM_DB)
     if (!items || !items.length) {
-        items = [
-            {
+        items = []
+        for (var i = 0; i < 20; i++) {
+            let object = {
                 _id: utilService.makeId(),
-                name: 'Hi Patamon',
-                imgUrl: 'src/img/1.png',
-                decription: 'Hello from Patamon!'
-            },
-            {
-                _id: utilService.makeId(),
-                name: 'Weeeeeeee Patamon',
-                imgUrl: 'src/img/2.png',
-                decription: 'Weeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-            },
-            {
-                _id: utilService.makeId(),
-                name: 'Angry Patamon',
-                imgUrl: 'src/img/3.png',
-                decription: 'Pffffff!'
-            },
-            {
-                _id: utilService.makeId(),
-                name: 'Whut?!',
-                imgUrl: '/src/img/4.png',
-                decription: 'oh?'
-            },
-            {
-                _id: utilService.makeId(),
-                name: 'Happy Patamon',
-                imgUrl: '/src/img/5.png',
-                decription: ''
-            },
-            {
-                _id: utilService.makeId(),
-                name: 'Flying Patamon',
-                imgUrl: '/src/img/6.png',
-                decription: 'EEEAAAAGGGAALEEEE'
+                name: utilService.makeLorem(1),
+                imgUrl: `https://robohash.org/?set=set3/${utilService.getRandomIntInclusive(1, 9999999)}`,
+                decription: utilService.makeLorem(5)
             }
-        ]
-        utilService.saveToStorage(ITEM_DB, items)
-    }
-    return items
-}
+            items.push(object)
 
+        }
+        utilService.saveToStorage(ITEM_DB, items)
+        return items
+    }
+}
 
 

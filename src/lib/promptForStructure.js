@@ -46,7 +46,7 @@ export async function promptForStructure() {
             type: 'input',
             name: 'cloudName',
             message: 'Enter your cloudinary cloud name',
-            default: '',
+            default: 'null',
             when: (answers) => answers.hooks.find(hook => hook === 'useImageUpload')
         },
         {
@@ -54,7 +54,7 @@ export async function promptForStructure() {
             type: 'input',
             name: 'uploadPresets',
             message: 'Enter your Upload Presets',
-            default: '',
+            default: 'null',
             when: (answers) => answers.hooks.find(hook => hook === 'useImageUpload')
         },
 

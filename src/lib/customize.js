@@ -5,7 +5,6 @@ import path from 'path'
 
 import { handleServerServices } from './handleServerServices.js'
 import { handleLocalServices } from './handleLocalServices.js'
-import { handleUtilService } from './handleUtilService.js'
 import { handleCustomHooks } from './handleCustomHooks.js'
 import { processDirectory } from './processDirectory.js'
 
@@ -48,7 +47,7 @@ export async function customize(answers, targetDir) {
     const utilTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'util.service.js'), 'utf-8')
     await fs.outputFile(path.join(serviceDestDir, 'util.service.js'), utilTemplate)
 
-    if (hooks && hooks.useImageUpload) {
+    if (cloudName || uploadPresets) {
         const uploadServiceTemplate = await fs.readFile(path.join(__dirname, '..', '..', 'templates', 'src', 'services', 'upload.service.js.ejs'), 'utf-8')
         const uploadServiceContent = ejs.render(uploadServiceTemplate, {
             cloudName,

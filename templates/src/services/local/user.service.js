@@ -12,6 +12,7 @@ export const userService = {
     getById,
     remove,
     update,
+    getEmptyCredentials
 
 }
 
@@ -73,6 +74,16 @@ function setLoggedinUser(user) {
 function getLoggedinUser() {
     return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN_USER))
 }
+
+function getEmptyCredentials(){
+    return{
+        userName:'',
+        password:'',
+        fullName:'',
+        email:''
+    }
+}
+
 
 
 

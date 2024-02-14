@@ -1,139 +1,61 @@
-import {  useEffect } from "react";
+import { useEffect } from "react"
 <% if (includeRedux) { %>
-    import { useSelector } from "react-redux";
-    import { load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s, remove<%=
-            entityName.charAt(0).toUpperCase() + entityName.slice(1) %> } from "../store/actions/<%= entityName %>
-                .actions";
-                <% } else { %>
-                    import { useState } from "react";
-                    import itemService from "../services/itemService"; // Adjust the import path as needed
-                    <% } %>
-                        import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List } from "../cmps/<%=
-                                entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List";
-                                import { Link } from "react-router-dom";
-                                import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service";
+import { useSelector } from "react-redux"
+import { load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s, remove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %> } from "../store/actions/<%= entityName %>.actions"
+<% } else { %>
+import { useState } from "react"
+import {<%= entityName %>Service} from "../services/<%= entityName %>.service"
+<% } %>
+import { <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List } from "../cmps/<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List"
+import { Link } from "react-router-dom"
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service"
 
-                                export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Index() {
-                                    <% if (includeRedux) { %>
-                                        const <%= entityName %>s = useSelector(storeState => storeState.<%= entityName
-                                                %>Module.<%= entityName %>s);
+export function <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>Index() {
+<% if (includeRedux) { %>
+const <%= entityName %>s = useSelector(storeState => storeState.<%= entityName %>Module.<%= entityName %>s)
 
-                                                    useEffect(() => {
-                                                    load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>
-                                                        s();
-                                                        }, []);
-                                                        <% } else { %>
-                                                            const [items, setItems] = useState(null);
+useEffect(() => {
+load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s()
+}, [])
+<% } else { %>
+const [<%= entityName %>s, set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s] = useState(null)
 
-                                                            useEffect(() => {
-                                                       
-                                                            loadItems();
-                                                            }, []);
-                                                            const loadItems = async () => {
-                                                                try {
-                                                                const loadedItems = await itemService.query();
-                                                                setItems(loadedItems);
-                                                                } catch (err) {
-                                                                console.log(err);
-                                                                }
-                                                                };
+useEffect(() => {
+const load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s = async () => {
+try {
+const loaded<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s = await <%= entityName %>Service.query()
+set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s(loaded<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s)
+} catch (err) {
+console.log(err)
+}
+}
+load<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s()
+}, [])
+<% } %>
 
-                                                            <% } %>
+async function onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>Id) {
+try {
+<% if (includeRedux) { %>
+await remove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>(<%= entityName %>Id)
+<% } else { %>
+await <%= entityName %>Service.remove(<%= entityName %>Id)
+set<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s(prev<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s => {
+    const idx = prev<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s.findIndex(<%= entityName %> => <%= entityName %>._id === <%= entityName %>Id)
+    const new<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s = prev<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s.toSpliced(idx, 1)
+    return new<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>s
+  })
+<% } %>
+showSuccessMsg('<%= entityName %> removed')
+} catch (err) {
+showErrorMsg('Cannot remove <%= entityName %>', err)
+}
+}
 
-                                                                async function onRemove<%=
-                                                                    entityName.charAt(0).toUpperCase() +
-                                                                    entityName.slice(1) %>(<%= entityName %>Id) {
-                                                                        try {
-                                                                        <% if (includeRedux) { %>
-                                                                            await remove<%=
-                                                                                entityName.charAt(0).toUpperCase() +
-                                                                                entityName.slice(1) %>(<%= entityName %>
-                                                                                    Id);
-                                                                                    <% } else { %>
-                                                                                      await <%= entityName %>Service.remove(<%= entityName %>Id)
-                                                                                        <% } %>
-                                                                                            showSuccessMsg('<%=
-                                                                                                entityName %> removed');
-                                                                                                } catch (err) {
-                                                                                                showErrorMsg('Cannot
-                                                                                                remove <%= entityName %>
-                                                                                                    ', err);
-                                                                                                    }
-                                                                                                    }
-
-                                                                                                    <% if (includeRedux)
-                                                                                                        { %>
-                                                                                                        return (
-                                                                                                        <section
-                                                                                                            className="<%= entityName %>-index flex">
-                                                                                                            <Link
-                                                                                                                to={'edit'}>
-                                                                                                            Add <%=
-                                                                                                                entityName.charAt(0).toUpperCase()
-                                                                                                                +
-                                                                                                                entityName.slice(1)
-                                                                                                                %>
-                                                                                                                </Link>
-                                                                                                                <<%= entityName.charAt(0).toUpperCase()
-                                                                                                                    +
-                                                                                                                    entityName.slice(1)
-                                                                                                                    %>
-                                                                                                                    List
-                                                                                                                    <%= entityName
-                                                                                                                        %>
-                                                                                                                        s={
-                                                                                                                        <%= entityName
-                                                                                                                            %>
-                                                                                                                            s}
-                                                                                                                            onRemove
-                                                                                                                            <%= entityName.charAt(0).toUpperCase()
-                                                                                                                                +
-                                                                                                                                entityName.slice(1)
-                                                                                                                                %>
-                                                                                                                                =
-                                                                                                                                {onRemove
-                                                                                                                                <%= entityName.charAt(0).toUpperCase()
-                                                                                                                                    +
-                                                                                                                                    entityName.slice(1)
-                                                                                                                                    %>
-                                                                                                                                    }
-                                                                                                                                    />
-                                                                                                        </section>
-                                                                                                        );
-                                                                                                        <% } else { %>
-                                                                                                            return (
-                                                                                                            <section
-                                                                                                                className="<%= entityName %>-index flex">
-                                                                                                                <Link
-                                                                                                                    to={'edit'}>
-                                                                                                                Add <%=
-                                                                                                                    entityName.charAt(0).toUpperCase()
-                                                                                                                    +
-                                                                                                                    entityName.slice(1)
-                                                                                                                    %>
-                                                                                                                    </Link>
-                                                                                                                    <<%= entityName.charAt(0).toUpperCase()
-                                                                                                                        +
-                                                                                                                        entityName.slice(1)
-                                                                                                                        %>
-                                                                                                                        List
-                                                                                                                        <%= entityName
-                                                                                                                            %>
-                                                                                                                            s={items}
-                                                                                                                            onRemove
-                                                                                                                            <%= entityName.charAt(0).toUpperCase()
-                                                                                                                                +
-                                                                                                                                entityName.slice(1)
-                                                                                                                                %>
-                                                                                                                                =
-                                                                                                                                {onRemove
-                                                                                                                                <%= entityName.charAt(0).toUpperCase()
-                                                                                                                                    +
-                                                                                                                                    entityName.slice(1)
-                                                                                                                                    %>
-                                                                                                                                    }
-                                                                                                                                    />
-                                                                                                            </section>
-                                                                                                            );
-                                                                                                            <% } %>
-                                                                                                                }
+if (!<%=entityName%>s) return <div>...Loading</div>
+return (
+<section className="<%= entityName %>-index flex">
+  <Link to={'edit'}>Add <%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %></Link>
+  <<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>List <%= entityName %>s={<%= entityName %>s} onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>={onRemove<%= entityName.charAt(0).toUpperCase() + entityName.slice(1) %>} />
+</section>
+)
+}
